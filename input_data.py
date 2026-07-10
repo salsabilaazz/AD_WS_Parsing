@@ -254,7 +254,7 @@ with st.form("form_warning"):
         )
 
     with col2:
-        petugas = st.text_input("Nama *Forecaster/Inputter*")
+        Petugas = st.text_input("Nama *Forecaster/Inputter*")
 
     sandi = st.text_area(
         "Masukkan Sandi *Warning*",
@@ -278,7 +278,7 @@ if submit:
         if hasil is None:
             st.error("Jenis *warning* tidak terdeteksi. Pastikan sandi mengandung 'AD WRNG' atau 'WS WRNG'.")
         else:
-            hasil["*Forecaster/Inputter*"] = petugas
+            hasil["*Forecaster/Inputter*"] = Petugas
 
             simpan_ke_sheets(hasil)
 
