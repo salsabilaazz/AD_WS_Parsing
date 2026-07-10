@@ -295,8 +295,27 @@ st.divider()
 st.subheader("📋 Riwayat Data *Warning*")
 
 try:
-    data = sheet.get_all_records()
-    df_db = pd.DataFrame(data)
+    data = sheet.get_all_records(
+                expected_headers=[
+                    "Timestamp",
+                    "ICAO",
+                    "Jenis_Warning",
+                    "Nomor_Warning",
+                    "Waktu_Terbit",
+                    "Valid_Dari",
+                    "Valid_Sampai",
+                    "Area",
+                    "Status_Observasi",
+                    "Waktu_Observasi",
+                    "Arah_Angin_Surface",
+                    "Kecepatan_Angin_Surface",
+                    "Arah_Angin_100ft",
+                    "Kecepatan_Angin_100ft",
+                    "Sandi_Asli",
+                    "Petugas"
+                ]
+    )       
+    df_db = pd.DataFrame(data[1:], columns=data[0])
 
     if df_db.empty:
         st.info("Belum ada data tersimpan.")
