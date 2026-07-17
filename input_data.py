@@ -156,7 +156,7 @@ def parse_ws_warning(sandi, bulan, tahun):
 
     obs = re.search(r"OBS\s+AT\s+(\d{4})", teks)
     if obs:
-        hasil["Waktu_Observasi"] = decode_warning_time(vobs.group(1), bulan, tahun)
+        hasil["Waktu_Observasi"] = decode_warning_time(obs.group(1), bulan, tahun)
 
     sfc = re.search(r"SFC\s+WIND:\s*(\d{3})/(\d{2})KT", teks)
     if sfc:
