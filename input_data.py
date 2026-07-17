@@ -352,6 +352,3 @@ with tab2:
             "Wind_Shear_Warning.csv",
             "text/csv"
         )
-
-except Exception as e:
-    st.error(f"Gagal membaca Google Sheets: {e}")
