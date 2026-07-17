@@ -144,7 +144,7 @@ def parse_ws_warning(sandi, bulan, tahun):
 
     valid_dari = re.search(r"WS\s+WRNG\s+\d+\s+(\d{6})", teks)
     if valid_dari:
-        hasil["Valid_Dari"] = decode_warning_time(waktu_terbit.group(1), bulan, tahun)
+        hasil["Valid_Dari"] = decode_warning_time(valid_dari.group(1), bulan, tahun)
 
     valid_tl = re.search(r"VALID\s+TL\s+(\d{6})", teks)
     if valid_tl:
