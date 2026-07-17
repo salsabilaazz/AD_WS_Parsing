@@ -58,9 +58,6 @@ def parse_ad_warning(sandi, bulan, tahun):
         "Intensitas": "",
         "Wind_Speed": "",
         "Wind_Max": "",
-        "Area": "",
-        "Status_Observasi": "",
-        "Waktu_Observasi": "",
         "Sandi_Asli": sandi
     }
 
