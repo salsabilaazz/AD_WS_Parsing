@@ -51,7 +51,6 @@ def parse_ad_warning(sandi, bulan, tahun):
         "ICAO": "",
         "Jenis_Warning": "Aerodrome Warning",
         "Nomor_Warning": "",
-        "Waktu_Terbit": "",
         "Valid_Dari": "",
         "Valid_Sampai": "",
         "Fenomena": "",
