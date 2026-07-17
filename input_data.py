@@ -118,7 +118,6 @@ def parse_ws_warning(sandi, bulan, tahun):
         "ICAO": "",
         "Jenis_Warning": "Wind Shear Warning",
         "Nomor_Warning": "",
-        "Waktu_Terbit": "",
         "Valid_Dari": "",
         "Valid_Sampai": "",
         "Fenomena": "Wind Shear",
@@ -126,7 +125,6 @@ def parse_ws_warning(sandi, bulan, tahun):
         "Wind_Speed": "",
         "Wind_Max": "",
         "Area": "",
-        "Status_Observasi": "",
         "Waktu_Observasi": "",
         "Arah_Angin_Surface": "",
         "Kecepatan_Angin_Surface": "",
@@ -144,9 +142,8 @@ def parse_ws_warning(sandi, bulan, tahun):
     if nomor:
         hasil["Nomor_Warning"] = nomor.group(1)
 
-    waktu_terbit = re.search(r"WS\s+WRNG\s+\d+\s+(\d{6})", teks)
-    if waktu_terbit:
-        hasil["Waktu_Terbit"] = decode_warning_time(waktu_terbit.group(1), bulan, tahun)
+    valid_dari = re.search(r"WS\s+WRNG\s+\d+\s+(\d{6})", teks)
+    if valid_dari:
         hasil["Valid_Dari"] = decode_warning_time(waktu_terbit.group(1), bulan, tahun)
 
     valid_tl = re.search(r"VALID\s+TL\s+(\d{6})", teks)
@@ -159,8 +156,7 @@ def parse_ws_warning(sandi, bulan, tahun):
 
     obs = re.search(r"OBS\s+AT\s+(\d{4})", teks)
     if obs:
-        hasil["Status_Observasi"] = "Observed"
-        hasil["Waktu_Observasi"] = obs.group(1)
+        hasil["Waktu_Observasi"] = decode_warning_time(vobs.group(1), bulan, tahun)
 
     sfc = re.search(r"SFC\s+WIND:\s*(\d{3})/(\d{2})KT", teks)
     if sfc:
