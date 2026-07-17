@@ -101,7 +101,7 @@ def parse_ad_warning(sandi, bulan, tahun):
 
     hasil["Fenomena"] = "; ".join(fenomena)
 
-    wspd = re.search(r"WSPD\s+(\d+)KT", teks)
+    wspd = re.search(r"\b(\d+)KT\b", teks)
     if wspd:
         hasil["Wind_Speed"] = f"{wspd.group(1)} KT"
 
