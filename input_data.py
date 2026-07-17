@@ -11,7 +11,8 @@ from google.oauth2.service_account import Credentials
 # KONFIGURASI GOOGLE SHEETS
 # ==================================================
 SHEET_NAME = "Database_Warning_Juanda"
-WORKSHEET_NAME = "warning"
+AD_WORKSHEET = "AD_Warning"
+WS_WORKSHEET = "WS_Warning"
 SERVICE_ACCOUNT_FILE = "credentials.json"
 
 SCOPES = [
@@ -26,7 +27,8 @@ creds = Credentials.from_service_account_info(
 
 client = gspread.authorize(creds)
 spreadsheet = client.open(SHEET_NAME)
-sheet = spreadsheet.worksheet(WORKSHEET_NAME)
+sheet_ad = spreadsheet.worksheet(AD_WORKSHEET)
+sheet_ws = spreadsheet.worksheet(WS_WORKSHEET)
 
 # ==================================================
 # FUNGSI WAKTU DDHHMM
@@ -197,28 +199,47 @@ def parse_warning(sandi, bulan, tahun):
 # SIMPAN KE GOOGLE SHEETS
 # ==================================================
 def simpan_ke_sheets(data):
-    sheet.append_row([
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        data.get("ICAO", ""),
-        data.get("Jenis_Warning", ""),
-        data.get("Nomor_Warning", ""),
-        str(data.get("Waktu_Terbit", "")),
-        str(data.get("Valid_Dari", "")),
-        str(data.get("Valid_Sampai", "")),
-        data.get("Fenomena", ""),
-        data.get("Intensitas", ""),
-        data.get("Wind_Speed", ""),
-        data.get("Wind_Max", ""),
-        data.get("Area", ""),
-        data.get("Status_Observasi", ""),
-        data.get("Waktu_Observasi", ""),
-        data.get("Arah_Angin_Surface", ""),
-        data.get("Kecepatan_Angin_Surface", ""),
-        data.get("Arah_Angin_100ft", ""),
-        data.get("Kecepatan_Angin_100ft", ""),
-        data.get("Sandi_Asli", ""),
-        data.get("Petugas", "")
-    ])
+
+    if data["Jenis_Warning"] == "Aerodrome Warning":
+        sheet = sheet_ad
+
+        sheet.append_row([
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            data.get("ICAO",""),
+            data.get("Jenis_Warning",""),
+            data.get("Nomor_Warning",""),
+            str(data.get("Valid_Dari","")),
+            str(data.get("Valid_Sampai","")),
+            data.get("Fenomena",""),
+            data.get("Intensitas",""),
+            data.get("Wind_Speed",""),
+            data.get("Wind_Max",""),
+            data.get("Sandi_Asli",""),
+            data.get("Petugas","")
+        ])
+
+    else:
+
+        sheet = sheet_ws
+
+        sheet.append_row([
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            data.get("ICAO",""),
+            data.get("Jenis_Warning",""),
+            data.get("Nomor_Warning",""),
+            str(data.get("Waktu_Terbit","")),
+            str(data.get("Valid_Dari","")),
+            str(data.get("Valid_Sampai","")),
+            data.get("Area",""),
+            data.get("Status_Observasi",""),
+            data.get("Waktu_Observasi",""),
+            data.get("Arah_Angin_Surface",""),
+            data.get("Kecepatan_Angin_Surface",""),
+            data.get("Arah_Angin_100ft",""),
+            data.get("Kecepatan_Angin_100ft",""),
+            data.get("Sandi_Asli",""),
+            data.get("Petugas","")
+        ])
 
 
 # ==================================================
@@ -294,40 +315,42 @@ if submit:
 st.divider()
 st.subheader("📋 Riwayat Data *Warning*")
 
-try:
-    data = sheet.get_all_records(
-                expected_headers=[
-                    "Timestamp",
-                    "ICAO",
-                    "Jenis_Warning",
-                    "Nomor_Warning",
-                    "Waktu_Terbit",
-                    "Valid_Dari",
-                    "Valid_Sampai",
-                    "Area",
-                    "Status_Observasi",
-                    "Waktu_Observasi",
-                    "Arah_Angin_Surface",
-                    "Kecepatan_Angin_Surface",
-                    "Arah_Angin_100ft",
-                    "Kecepatan_Angin_100ft",
-                    "Sandi_Asli",
-                    "Petugas"
-                ]
-    )       
-    df_db = pd.DataFrame(data[1:], columns=data[0])
+tab1, tab2 = st.tabs(
+    ["Aerodrome Warning", "Wind Shear Warning"]
+)
+with tab1:
 
-    if df_db.empty:
-        st.info("Belum ada data tersimpan.")
+    data_ad = sheet_ad.get_all_records()
+
+    df_ad = pd.DataFrame(data_ad)
+
+    if df_ad.empty:
+        st.info("Belum ada data Aerodrome Warning.")
     else:
-        st.dataframe(df_db, use_container_width=True)
+        st.dataframe(df_ad, use_container_width=True)
 
-        csv = df_db.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="Download Data CSV",
-            data=csv,
-            file_name="database_warning_juanda.csv",
-            mime="text/csv"
+            "Download CSV",
+            df_ad.to_csv(index=False).encode("utf-8"),
+            "Aerodrome_Warning.csv",
+            "text/csv"
+        )
+with tab2:
+
+    data_ws = sheet_ws.get_all_records()
+
+    df_ws = pd.DataFrame(data_ws)
+
+    if df_ws.empty:
+        st.info("Belum ada data Wind Shear Warning.")
+    else:
+        st.dataframe(df_ws, use_container_width=True)
+
+        st.download_button(
+            "Download CSV",
+            df_ws.to_csv(index=False).encode("utf-8"),
+            "Wind_Shear_Warning.csv",
+            "text/csv"
         )
 
 except Exception as e:
