@@ -299,7 +299,7 @@ if submit:
         if hasil is None:
             st.error("Jenis *warning* tidak terdeteksi. Pastikan sandi mengandung 'AD WRNG' atau 'WS WRNG'.")
         else:
-            hasil["*Forecaster/Inputter*"] = Petugas
+            hasil["Petugas"] = Petugas
 
             simpan_ke_sheets(hasil)
 
